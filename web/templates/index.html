@@ -1,0 +1,2175 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MBG Freshness AI — Kelompok 11</title>
+  <!-- Load premium Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap"
+    rel="stylesheet">
+  <script>
+    // Immediately initialize theme from localStorage to prevent flash
+    (function () {
+      const savedTheme = localStorage.getItem('theme') || 'light';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+    })();
+  </script>
+  <style>
+    /* ==========================================
+     DESIGN SYSTEM VARIABLES & CORE RESET
+     ========================================== */
+    :root {
+      --color-primary: #120A59;
+      --color-secondary: #E5E7EB;
+      --color-tertiary: #D8F500;
+      --color-neutral: #FFFFFF;
+      --color-surface: #FFFFFF;
+      --color-on-surface: #120A59;
+      --color-error: #D92D20;
+
+      --color-primary-60: #5B5490;
+      --color-primary-70: #7B74A8;
+      --color-primary-90: #E7E5F2;
+      --color-success: #0D9488;
+      --color-warn: #F59E0B;
+
+      --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+
+      --rounded-none: 0px;
+      --rounded-sm: 4px;
+      --rounded-md: 8px;
+      --rounded-lg: 16px;
+      --rounded-xl: 24px;
+      --rounded-full: 9999px;
+
+      --spacing-xs: 8px;
+      --spacing-sm: 16px;
+      --spacing-md: 32px;
+      --spacing-lg: 60px;
+      --spacing-xl: 100px;
+
+      --bg-card-mini: #F9FAFB;
+      --bg-rek-box: #F9FAFB;
+      --border-rek-box: var(--color-secondary);
+    }
+
+    /* Dark Mode Variables overrides */
+    [data-theme="dark"] {
+      --color-primary: #FFFFFF;
+      --color-secondary: #222244;
+      --color-neutral: #070714;
+      --color-surface: #0E0E24;
+      --color-on-surface: #F3F4F6;
+      --color-error: #EF4444;
+
+      --color-primary-60: #9CA3AF;
+      --color-primary-70: #8C8CB4;
+      --color-primary-90: #1B1B3C;
+      --color-success: #14B8A6;
+      --color-warn: #F59E0B;
+
+      --bg-card-mini: #151532;
+      --bg-rek-box: #12122B;
+      --border-rek-box: var(--color-secondary);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: var(--color-neutral);
+      color: var(--color-on-surface);
+      font-family: var(--font-sans);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      position: relative;
+      z-index: 1;
+      transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+      zoom: 0.8;
+    }
+
+    /* Radial color blobs for premium background depth */
+    body::before {
+      content: '';
+      position: fixed;
+      width: 50vw;
+      height: 50vw;
+      top: -10vw;
+      left: -10vw;
+      background: radial-gradient(circle, rgba(18, 10, 89, 0.05) 0%, transparent 70%);
+      filter: blur(100px);
+      z-index: -10;
+      pointer-events: none;
+      transition: background 0.3s ease;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      width: 40vw;
+      height: 40vw;
+      bottom: 5vw;
+      right: -10vw;
+      background: radial-gradient(circle, rgba(216, 245, 0, 0.08) 0%, transparent 70%);
+      filter: blur(80px);
+      z-index: -10;
+      pointer-events: none;
+      transition: background 0.3s ease;
+    }
+
+    [data-theme="dark"] body::before {
+      background: radial-gradient(circle, rgba(91, 84, 144, 0.08) 0%, transparent 70%);
+    }
+
+    [data-theme="dark"] body::after {
+      background: radial-gradient(circle, rgba(216, 245, 0, 0.04) 0%, transparent 70%);
+    }
+
+    header,
+    .card,
+    .mini-metric,
+    .btn,
+    .history-item,
+    .info-card,
+    .header-bar,
+    #rekomendasiTindakan {
+      transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+    }
+
+    /* ==========================================
+     TYPOGRAPHY STYLES
+     ========================================== */
+    .headline-display {
+      font-family: var(--font-sans);
+      font-size: 57px;
+      font-weight: 800;
+      line-height: 64px;
+      letter-spacing: -1.5px;
+      color: var(--color-primary);
+    }
+
+    .headline-lg {
+      font-family: var(--font-sans);
+      font-size: 48px;
+      font-weight: 800;
+      line-height: 57px;
+      letter-spacing: -0.8px;
+      color: var(--color-primary);
+    }
+
+    .headline-md {
+      font-family: var(--font-sans);
+      font-size: 40px;
+      font-weight: 800;
+      line-height: 48px;
+      letter-spacing: -0.5px;
+      color: var(--color-primary);
+    }
+
+    .headline-sm {
+      font-family: var(--font-sans);
+      font-size: 33px;
+      font-weight: 700;
+      line-height: 40px;
+      letter-spacing: 0px;
+      color: var(--color-primary);
+    }
+
+    .body-lg {
+      font-family: var(--font-sans);
+      font-size: 24px;
+      font-weight: 400;
+      line-height: 38px;
+      letter-spacing: 0px;
+      color: var(--color-primary-60);
+    }
+
+    .body-md {
+      font-family: var(--font-sans);
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 24px;
+      letter-spacing: 0px;
+    }
+
+    .body-sm {
+      font-family: var(--font-sans);
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 20px;
+      letter-spacing: 0px;
+    }
+
+    .label-lg {
+      font-family: var(--font-sans);
+      font-size: 16px;
+      font-weight: 600;
+      line-height: 24px;
+      letter-spacing: 0px;
+    }
+
+    .label-md {
+      font-family: var(--font-sans);
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 20px;
+      letter-spacing: 0px;
+    }
+
+    .label-sm {
+      font-family: var(--font-sans);
+      font-size: 12px;
+      font-weight: 600;
+      line-height: 16px;
+      letter-spacing: 0.5px;
+    }
+
+    /* Stabilo text highlights */
+    .highlight-line {
+      position: relative;
+      display: inline-block;
+      z-index: 1;
+    }
+
+    .highlight-line::after {
+      content: '';
+      position: absolute;
+      left: -2px;
+      bottom: 6px;
+      width: calc(100% + 4px);
+      height: 16px;
+      background-color: rgba(216, 245, 0, 0.4);
+      /* Stabilo Lime */
+      z-index: -1;
+      border-radius: var(--rounded-sm);
+      transition: background-color 0.3s ease;
+    }
+
+    [data-theme="dark"] .highlight-line::after {
+      background-color: rgba(216, 245, 0, 0.9);
+      /* Vibrant Lime in dark mode */
+    }
+
+    /* ==========================================
+     DYNAMIC ISLAND NAVBAR STYLE & MORPHING
+     ========================================== */
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 24px;
+      border: 1px solid rgba(18, 10, 89, 0.08);
+      background: rgba(255, 255, 255, 0.75);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 95%;
+      max-width: 1600px;
+      border-radius: var(--rounded-full);
+      z-index: 1000;
+      box-shadow: 0 12px 30px rgba(18, 10, 89, 0.04);
+      transition: max-width 0.4s cubic-bezier(0.16, 1, 0.3, 1), padding 0.4s ease, border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+    }
+
+    [data-theme="dark"] header {
+      background: rgba(14, 14, 36, 0.75);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Morphing on scroll */
+    header.scrolled {
+      max-width: 480px;
+      padding: 8px 28px;
+      box-shadow: 0 12px 30px rgba(18, 10, 89, 0.1);
+    }
+
+    [data-theme="dark"] header.scrolled {
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    header.scrolled .logo-title {
+      opacity: 0;
+      visibility: hidden;
+      max-width: 0;
+      margin: 0;
+      overflow: hidden;
+    }
+
+    header.scrolled .header-right {
+      opacity: 0;
+      visibility: hidden;
+      max-width: 0;
+      margin: 0;
+      overflow: hidden;
+    }
+
+    header.scrolled .logo {
+      gap: 0;
+    }
+
+    /* Bouncing pulsing border when model is active and scanning */
+    header.scanning {
+      border-color: var(--color-success) !important;
+      box-shadow: 0 0 16px rgba(13, 148, 136, 0.35) !important;
+    }
+
+    /* Fade transitions for inner header items */
+    .logo-title,
+    .header-right {
+      transition: opacity 0.3s ease, max-width 0.3s ease, margin 0.3s ease, visibility 0.3s ease;
+      opacity: 1;
+      visibility: visible;
+      max-width: 250px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .logo-title {
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+      color: var(--color-primary);
+    }
+
+    .logo-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: var(--rounded-full);
+      background: var(--color-tertiary);
+      display: inline-block;
+      transition: transform 0.3s ease;
+    }
+
+    header.scanning .logo-dot {
+      animation: scanningPulse 1.5s infinite;
+    }
+
+    @keyframes scanningPulse {
+      0% {
+        transform: scale(0.95);
+        background-color: var(--color-tertiary);
+      }
+
+      50% {
+        transform: scale(1.3);
+        background-color: var(--color-success);
+      }
+
+      100% {
+        transform: scale(0.95);
+        background-color: var(--color-tertiary);
+      }
+    }
+
+    /* Tabs in Island */
+    .tabs {
+      display: flex;
+      gap: 20px;
+    }
+
+    .tab {
+      color: var(--color-primary-70);
+      cursor: pointer;
+      padding: 6px 12px;
+      font-size: 14px;
+      font-weight: 600;
+      border-bottom: none;
+      border-radius: var(--rounded-full);
+      transition: all 0.2s ease;
+    }
+
+    .tab:hover {
+      color: var(--color-primary);
+      background: var(--color-primary-90);
+    }
+
+    .tab.active {
+      color: var(--color-neutral);
+      background: var(--color-primary);
+      font-weight: 600;
+    }
+
+    .tab-content {
+      display: none;
+      flex: 1;
+    }
+
+    .tab-content.active {
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Right-side items on header */
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--color-primary-60);
+    }
+
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: var(--rounded-full);
+      background: var(--color-secondary);
+      display: inline-block;
+      transition: all 0.3s ease;
+    }
+
+    .status-dot.live {
+      background: var(--color-success);
+      box-shadow: 0 0 0 3px var(--color-primary-90);
+      animation: pulse 2s infinite;
+    }
+
+    .status-dot.error {
+      background: var(--color-error);
+      box-shadow: 0 0 0 3px rgba(217, 45, 32, 0.15);
+    }
+
+    @keyframes pulse {
+      0% {
+        transform: scale(0.95);
+        opacity: 1;
+      }
+
+      50% {
+        transform: scale(1.05);
+        opacity: 0.6;
+      }
+
+      100% {
+        transform: scale(0.95);
+        opacity: 1;
+      }
+    }
+
+    /* Custom theme toggler button svg mapping */
+    .theme-toggle-btn:hover {
+      background-color: var(--color-primary-90) !important;
+    }
+
+    [data-theme="dark"] .sun-icon {
+      display: block !important;
+    }
+
+    [data-theme="dark"] .moon-icon {
+      display: none !important;
+    }
+
+    /* ==========================================
+     DETECTION MAIN VIEW (EDITORIAL GRID)
+     ========================================== */
+    .main-detection {
+      display: flex;
+      flex-direction: column;
+      padding: var(--spacing-lg) 40px;
+      max-width: 1600px;
+      width: 95%;
+      margin: 80px auto 0;
+      /* Add top margin to clear floating header */
+      gap: var(--spacing-md);
+    }
+
+    /* Hero Statement */
+    .hero-section {
+      margin-bottom: var(--spacing-sm);
+      max-width: 900px;
+    }
+
+    .hero-section p {
+      margin-top: 12px;
+    }
+
+    .detection-layout {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 40px;
+      width: 100%;
+    }
+
+    /* Left Panel: Camera/Media Box */
+    .camera-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .camera-frame {
+      position: relative;
+      background: #F9FAFB;
+      border-radius: var(--rounded-md);
+      overflow: hidden;
+      aspect-ratio: 4/3;
+      border: 2px solid var(--color-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    [data-theme="dark"] .camera-frame {
+      background: #0E0E28;
+    }
+
+    /* Glowing effect for viewfinder feedback */
+    .camera-frame.segar {
+      border-color: var(--color-success) !important;
+      box-shadow: 0 0 16px rgba(13, 148, 136, 0.3);
+    }
+
+    .camera-frame.tidak {
+      border-color: var(--color-error) !important;
+      box-shadow: 0 0 16px rgba(217, 45, 32, 0.3);
+    }
+
+    #mediaEl {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+
+    #overlayCanvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    .result-overlay {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      padding: 8px 16px;
+      border-radius: var(--rounded-full);
+      font-size: 13px;
+      font-weight: 700;
+      backdrop-filter: blur(8px);
+      background: rgba(18, 10, 89, 0.85);
+      color: #FFFFFF;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      display: none;
+      letter-spacing: 0.5px;
+    }
+
+    .result-overlay.segar {
+      border-color: var(--color-success);
+      color: var(--color-tertiary);
+    }
+
+    .result-overlay.tidak {
+      border-color: var(--color-error);
+      color: #FFC0C0;
+    }
+
+    .fps-badge {
+      position: absolute;
+      bottom: 12px;
+      right: 12px;
+      font-size: 11px;
+      color: var(--color-neutral);
+      background: var(--color-primary);
+      padding: 4px 8px;
+      border-radius: var(--rounded-sm);
+      font-family: var(--font-mono);
+      font-weight: 600;
+    }
+
+    .analysis-loader {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      font-size: 11px;
+      font-weight: 700;
+      background: var(--color-primary);
+      color: var(--color-neutral);
+      padding: 6px 12px;
+      border-radius: var(--rounded-sm);
+      display: none;
+      align-items: center;
+      gap: 6px;
+      z-index: 10;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    .scan-line {
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--color-primary), transparent);
+      top: 0;
+      animation: scan 3s linear infinite;
+      display: none;
+    }
+
+    .scan-line.active {
+      display: block;
+    }
+
+    @keyframes scan {
+      0% {
+        top: 0;
+      }
+
+      100% {
+        top: 100%;
+      }
+    }
+
+    /* Control buttons - Pill geometry */
+    .camera-controls {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 10px 24px;
+      border-radius: var(--rounded-full);
+      font-family: var(--font-sans);
+      font-size: 14px;
+      font-weight: 600;
+      border: 1px solid var(--color-secondary);
+      cursor: pointer;
+      background: var(--color-neutral);
+      color: var(--color-primary);
+    }
+
+    .btn:hover {
+      background: var(--color-secondary);
+      border-color: #D1D5DB;
+    }
+
+    [data-theme="dark"] .btn:hover {
+      border-color: #3b3b6e;
+    }
+
+    .btn:active {
+      transform: scale(0.97);
+    }
+
+    /* Primary Action Button (High energy lime color for camera) */
+    .btn.primary {
+      background: var(--color-tertiary);
+      color: #120A59;
+      border-color: var(--color-tertiary);
+    }
+
+    .btn.primary:hover {
+      background: #C4DE00;
+      border-color: #C4DE00;
+    }
+
+    .btn.dark {
+      background: var(--color-primary);
+      color: var(--color-neutral);
+      border-color: var(--color-primary);
+    }
+
+    .btn.dark:hover {
+      background: var(--color-primary-60);
+      border-color: var(--color-primary-60);
+    }
+
+    .btn.danger {
+      background: transparent;
+      color: var(--color-error);
+      border-color: var(--color-secondary);
+    }
+
+    .btn.danger:hover {
+      background: rgba(217, 45, 32, 0.05);
+      border-color: var(--color-error);
+    }
+
+    .btn:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    /* Right Panel: Side Cards Stack */
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    /* Editorial Minimalist Cards */
+    .card {
+      background: var(--color-surface);
+      border-radius: var(--rounded-md);
+      border: 1px solid var(--color-secondary);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .card-title {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--color-primary-70);
+      border-bottom: 1px solid var(--color-secondary);
+      padding-bottom: 10px;
+    }
+
+    .result-big {
+      padding: 8px 0;
+    }
+
+    .result-label {
+      font-size: 36px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      transition: color 0.3s;
+    }
+
+    .result-label.segar {
+      color: var(--color-success);
+    }
+
+    .result-label.tidak {
+      color: var(--color-error);
+    }
+
+    .result-label.idle {
+      color: var(--color-primary-70);
+      font-size: 28px;
+      font-weight: 500;
+    }
+
+    /* Confidence metrics */
+    .confidence-bar-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .conf-row {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .conf-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      color: var(--color-primary);
+      font-weight: 600;
+    }
+
+    .conf-track {
+      height: 4px;
+      background: var(--color-secondary);
+      border-radius: var(--rounded-full);
+      overflow: hidden;
+    }
+
+    .conf-fill {
+      height: 100%;
+      border-radius: var(--rounded-full);
+      transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      background: var(--color-primary-70);
+    }
+
+    .conf-fill.segar {
+      background: var(--color-success);
+    }
+
+    .conf-fill.tidak {
+      background: var(--color-error);
+    }
+
+    /* Kelayakan Area */
+    .kelayakan-container {
+      border-top: 1px solid var(--color-secondary);
+      padding-top: 16px;
+      margin-top: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .kelayakan-score-wrap {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+
+    .kelayakan-score {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--color-primary);
+    }
+
+    .kelayakan-status-badge {
+      font-size: 11px;
+      font-weight: 700;
+      text-align: center;
+      color: var(--color-primary-60);
+      padding: 8px 12px;
+      border-radius: var(--rounded-sm);
+      border: 1px solid var(--color-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      transition: all 0.3s ease;
+    }
+
+    /* Toggle Panel */
+    .model-load-area {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 14px;
+      color: var(--color-primary);
+      padding: 6px 0;
+    }
+
+    /* Toggle Switch */
+    .toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 44px;
+      height: 24px;
+      flex-shrink: 0;
+    }
+
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .toggle-slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: var(--color-secondary);
+      transition: .3s;
+      border-radius: var(--rounded-full);
+    }
+
+    .toggle-slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .3s;
+      border-radius: var(--rounded-full);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+    }
+
+    .toggle-switch input:checked+.toggle-slider {
+      background-color: #120A59;
+    }
+
+    [data-theme="dark"] .toggle-switch input:checked+.toggle-slider {
+      background-color: #D8F500;
+    }
+
+    [data-theme="dark"] .toggle-switch input:checked+.toggle-slider:before {
+      background-color: #070714;
+    }
+
+    .toggle-switch input:checked+.toggle-slider:before {
+      transform: translateX(20px);
+    }
+
+    .file-input-wrap {
+      position: relative;
+    }
+
+    .file-input-wrap input[type="file"] {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    /* Metrics Grid (As horizontal bar in left column) */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+
+    .mini-metric {
+      background: var(--bg-card-mini);
+      border-radius: var(--rounded-sm);
+      padding: 14px 16px;
+      border: 1px solid var(--color-secondary);
+    }
+
+    .mini-label {
+      font-size: 11px;
+      color: var(--color-primary-70);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+      font-weight: 600;
+    }
+
+    .mini-val {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--color-primary);
+      font-family: var(--font-mono);
+    }
+
+    /* History list */
+    .history-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 200px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .history-list::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .history-list::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .history-list::-webkit-scrollbar-thumb {
+      background: var(--color-secondary);
+      border-radius: var(--rounded-full);
+    }
+
+    .history-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 12px;
+      border-radius: var(--rounded-sm);
+      background: var(--bg-card-mini);
+      border: 1px solid transparent;
+      transition: all 0.2s ease;
+    }
+
+    .history-item:hover {
+      background: var(--color-surface);
+      border-color: var(--color-secondary);
+    }
+
+    .hist-badge {
+      padding: 3px 8px;
+      border-radius: var(--rounded-full);
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 0.5px;
+    }
+
+    .hist-badge.segar {
+      background: rgba(13, 148, 136, 0.1);
+      color: var(--color-success);
+    }
+
+    .hist-badge.tidak {
+      background: rgba(217, 45, 32, 0.1);
+      color: var(--color-error);
+    }
+
+    .hist-conf {
+      color: var(--color-primary);
+      font-weight: 600;
+      font-size: 13px;
+      margin-left: 10px;
+      font-family: var(--font-mono);
+    }
+
+    .hist-time {
+      color: var(--color-primary-60);
+      font-size: 11px;
+      font-family: var(--font-mono);
+    }
+
+    .empty-history {
+      text-align: center;
+      color: var(--color-primary-60);
+      font-size: 13px;
+      padding: 24px 0;
+      font-style: italic;
+    }
+
+    /* Asymmetrical layout spacer */
+    .section-divider {
+      border: none;
+      border-top: 1px solid var(--color-secondary);
+      margin: 40px 0;
+      width: 100%;
+    }
+
+    /* Explanations block */
+    .explanation-card.full-width {
+      width: 100%;
+      background: var(--color-surface);
+      border-radius: var(--rounded-md);
+      border: 1px solid var(--color-secondary);
+      padding: 32px;
+    }
+
+    /* ==========================================
+     REPORT VIEW STYLES
+     ========================================== */
+    .report-content {
+      padding: var(--spacing-lg) 40px;
+      max-width: 1600px;
+      width: 95%;
+      margin: 80px auto 0;
+      /* Add top margin to clear floating header */
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+
+    .header-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 32px;
+      background: var(--bg-card-mini);
+      border: 1px solid var(--color-secondary);
+      border-radius: var(--rounded-md);
+    }
+
+    .report-title {
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--color-primary);
+      margin: 0 0 6px;
+      letter-spacing: -0.5px;
+    }
+
+    .report-sub {
+      font-size: 15px;
+      color: var(--color-primary-60);
+    }
+
+    .tag {
+      display: inline-block;
+      font-size: 11px;
+      padding: 4px 10px;
+      border-radius: var(--rounded-full);
+      background: var(--color-primary-90);
+      color: var(--color-primary);
+      margin-left: 12px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      vertical-align: middle;
+    }
+
+    .report-meta {
+      text-align: right;
+      font-size: 13px;
+      color: var(--color-primary-60);
+    }
+
+    /* Metric cards */
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+
+    .metric-card {
+      background: var(--color-surface);
+      border-radius: var(--rounded-md);
+      padding: 24px;
+      border: 1px solid var(--color-secondary);
+    }
+
+    .metric-label {
+      font-size: 11px;
+      color: var(--color-primary-70);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+      font-weight: 700;
+    }
+
+    .metric-value {
+      font-size: 36px;
+      font-weight: 800;
+      color: var(--color-primary);
+      letter-spacing: -1px;
+    }
+
+    .metric-value.green {
+      color: var(--color-success);
+    }
+
+    .metric-value.blue {
+      color: var(--color-primary);
+    }
+
+    .metric-sub {
+      font-size: 12px;
+      color: var(--color-primary-60);
+      margin-top: 6px;
+      font-weight: 500;
+    }
+
+    .info-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    .info-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-secondary);
+      border-radius: var(--rounded-md);
+      padding: 28px;
+    }
+
+    .info-card-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--color-primary);
+      margin-bottom: 20px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      border-bottom: 1px solid var(--color-secondary);
+      padding-bottom: 8px;
+    }
+
+    .kv {
+      display: flex;
+      justify-content: space-between;
+      font-size: 14px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--color-secondary);
+    }
+
+    .kv:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .kv-k {
+      color: var(--color-primary-60);
+      font-weight: 500;
+    }
+
+    .kv-v {
+      font-weight: 600;
+      color: var(--color-primary);
+    }
+
+    .report-img-container {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .report-img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: var(--rounded-sm);
+      border: 1px solid var(--color-secondary);
+      margin-top: 12px;
+      background: #FFFFFF;
+    }
+
+    .confusion-matrix-card {
+      grid-column: span 2;
+    }
+
+    /* ==========================================
+     RESPONSIVENESS & MEDIA QUERIES
+     ========================================== */
+    @media (max-width: 1200px) {
+      .detection-layout {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+    }
+
+    @media (max-width: 992px) {
+      .info-row {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+
+      .report-img-grid {
+        grid-template-columns: 1fr !important;
+      }
+
+      .confusion-matrix-card {
+        grid-column: span 1 !important;
+      }
+
+      .metric-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 16px !important;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .camera-panel .metrics-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+      }
+    }
+
+    @media (max-width: 900px) {
+      .steps-row {
+        flex-direction: column;
+        align-items: flex-start !important;
+        gap: 16px !important;
+      }
+
+      .step-arrow {
+        display: none;
+      }
+    }
+
+    @media (max-width: 768px) {
+      body {
+        zoom: 1;
+      }
+
+      header {
+        position: fixed !important;
+        top: 12px !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        width: 92% !important;
+        max-width: 440px !important;
+        border-radius: 9999px !important;
+        padding: 8px 24px !important;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12) !important;
+        backdrop-filter: blur(20px) !important;
+        -webkit-backdrop-filter: blur(20px) !important;
+      }
+
+      /* Force always compact style on mobile so it fits the screen width */
+      .logo-title,
+      .header-right {
+        display: none !important;
+      }
+
+      .tabs {
+        gap: 8px !important;
+      }
+
+      .tab {
+        padding: 4px 12px !important;
+        font-size: 13px !important;
+      }
+
+      .main-detection,
+      .report-content {
+        padding: 24px 16px !important;
+        margin-top: 60px !important;
+      }
+
+      .header-bar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+        padding: 20px;
+      }
+
+      .report-meta {
+        text-align: left !important;
+      }
+
+      .headline-display {
+        font-size: 38px;
+        line-height: 44px;
+      }
+
+      .headline-lg {
+        font-size: 32px;
+        line-height: 38px;
+      }
+
+      .body-lg {
+        font-size: 18px;
+        line-height: 28px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .camera-controls {
+        flex-direction: column;
+        width: 100%;
+      }
+
+      .camera-controls .btn,
+      .camera-controls .file-input-wrap {
+        width: 100% !important;
+      }
+
+      .metric-grid {
+        grid-template-columns: 1fr !important;
+        gap: 12px !important;
+      }
+
+      .headline-display {
+        font-size: 32px !important;
+        line-height: 38px !important;
+      }
+
+      .body-lg {
+        font-size: 16px !important;
+        line-height: 24px !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <div class="logo">
+      <span class="logo-dot"></span>
+      <span class="logo-title">MBG Freshness AI</span>
+    </div>
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab('detection', this)">Detection</div>
+      <div class="tab" onclick="switchTab('report', this)">Training Report</div>
+    </div>
+    <div class="header-actions">
+      <button class="theme-toggle-btn" id="themeToggle" onclick="toggleTheme()" aria-label="Toggle Theme"
+        style="background: transparent; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 8px; border-radius: var(--rounded-full); color: var(--color-primary); transition: background-color 0.2s;">
+        <!-- Sun Icon (visible in Dark Mode) -->
+        <svg class="sun-icon" style="display: none; width: 20px; height: 20px; fill: currentColor;" viewBox="0 0 20 20">
+          <path
+            d="M10 15a5 5 0 110-10 5 5 0 010 10zm0-1.5a3.5 3.5 0 100-7 3.5 3.5 0 000 7zm0-9.5c.41 0 .75-.34.75-.75V2a.75.75 0 10-1.5 0v1.25c0 .41.34.75.75.75zm0 12c.41 0 .75-.34.75-.75V16a.75.75 0 10-1.5 0v1.25c0 .41.34.75.75.75zM4 10c0-.41-.34-.75-.75-.75H2a.75.75 0 100 1.5h1.25c.41 0 .75-.34.75-.75zm14 0c0-.41-.34-.75-.75-.75h-1.25a.75.75 0 100 1.5h1.25c.41 0 .75-.34.75-.75zM5.05 5.05a.75.75 0 00-1.06 1.06l.88.88a.75.75 0 001.06-1.06l-.88-.88zm10.78 10.78a.75.75 0 00-1.06 1.06l.88.88a.75.75 0 001.06-1.06l-.88-.88zM5.05 14.95l-.88.88a.75.75 0 101.06 1.06l.88-.88a.75.75 0 10-1.06-1.06zm10.78-10.78l-.88.88a.75.75 0 101.06 1.06l.88-.88a.75.75 0 10-1.06-1.06z" />
+        </svg>
+        <!-- Moon Icon (visible in Light Mode) -->
+        <svg class="moon-icon" style="display: block; width: 20px; height: 20px; fill: currentColor;"
+          viewBox="0 0 20 20">
+          <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
+        </svg>
+      </button>
+      <div class="header-right">
+        <span class="status-dot" id="statusDot"></span>
+        <span id="statusText">Memeriksa status model...</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- TAB DETECTION -->
+  <div class="tab-content active" id="tab-detection">
+    <main class="main-detection">
+
+      <!-- Hero Title -->
+      <div class="hero-section">
+        <h1 class="headline-display">Pindai <span class="highlight-line">Bahan Makanan</span> Anda</h1>
+        <p class="body-lg">
+          Gunakan kamera perangkat Anda atau unggah gambar untuk mendeteksi kesegaran bahan pangan secara realtime
+          dengan AI.
+        </p>
+      </div>
+
+      <!-- 2 Column Workspace Grid -->
+      <div class="detection-layout">
+
+        <!-- Left Column: Camera, Controls, Stats, and History -->
+        <div class="camera-panel">
+
+          <!-- Live Video Viewfinder -->
+          <div class="camera-frame" id="cameraFrame">
+            <video id="mediaEl" autoplay muted playsinline></video>
+            <img id="imageEl" style="display:none; width:100%; height:100%; object-fit:contain;" />
+            <canvas id="captureCanvas" style="display:none;"></canvas>
+            <canvas id="overlayCanvas"></canvas>
+            <div class="result-overlay" id="resultOverlay">—</div>
+            <div class="scan-line" id="scanLine"></div>
+            <div class="fps-badge" id="fpsBadge">— FPS</div>
+            <div class="analysis-loader" id="analysisLoader">
+              <svg
+                style="animation: spin 1s linear infinite; width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 3;"
+                viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-opacity="0.25"></circle>
+                <path fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+              </svg>
+              Menganalisis...
+            </div>
+          </div>
+
+          <!-- Buttons Panel -->
+          <div class="camera-controls">
+            <button class="btn primary" id="startBtn" onclick="startCamera()">Buka Kamera</button>
+            <button class="btn" id="stopBtn" onclick="stopCamera()" disabled>Stop Kamera</button>
+            <div class="file-input-wrap" style="flex: 1; min-width: 180px;">
+              <button class="btn dark" style="width: 100%;">Unggah Media</button>
+              <input type="file" id="mediaUpload" accept="image/*,video/*" onchange="handleFileUpload(event)">
+            </div>
+          </div>
+
+          <!-- Session Statistics (Horizontal Bar) -->
+          <div class="card" style="gap: 12px;">
+            <div class="card-title">Statistik Sesi</div>
+            <div class="metrics-grid">
+              <div class="mini-metric">
+                <div class="mini-label">Total Analisis</div>
+                <div class="mini-val" id="totalScan">0</div>
+              </div>
+              <div class="mini-metric">
+                <div class="mini-label">Rata-rata Conf.</div>
+                <div class="mini-val" id="avgConf">—</div>
+              </div>
+              <div class="mini-metric">
+                <div class="mini-label">Total Segar</div>
+                <div class="mini-val" style="color: var(--color-success);" id="countSegar">0</div>
+              </div>
+              <div class="mini-metric">
+                <div class="mini-label">Total Rusak</div>
+                <div class="mini-val" style="color: var(--color-error);" id="countTidak">0</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Scan History (Moved under Camera controls) -->
+          <div class="card">
+            <div class="card-title"
+              style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--color-secondary); padding-bottom: 10px;">
+              <span>Riwayat Prediksi</span>
+              <button class="btn danger" style="padding: 4px 12px; font-size: 11px;"
+                onclick="clearHistory()">Reset</button>
+            </div>
+            <div class="history-list" id="historyList">
+              <div class="empty-history">Belum ada riwayat pemindaian</div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Right Column: Results & Info Dashboard -->
+        <div class="sidebar">
+
+          <!-- Primary Results Summary -->
+          <div class="card">
+            <div class="card-title">Hasil Analisis</div>
+
+            <div class="result-big">
+              <div class="result-label idle" id="resultLabel">Menunggu...</div>
+            </div>
+
+            <div class="confidence-bar-wrap">
+              <div class="conf-row">
+                <div class="conf-label">
+                  <span>Segar</span>
+                  <span id="segarPct">—</span>
+                </div>
+                <div class="conf-track">
+                  <div class="conf-fill segar" id="segarBar" style="width:0%"></div>
+                </div>
+              </div>
+
+              <div class="conf-row">
+                <div class="conf-label">
+                  <span>Tidak Segar</span>
+                  <span id="tidakPct">—</span>
+                </div>
+                <div class="conf-track">
+                  <div class="conf-fill tidak" id="tidakBar" style="width:0%"></div>
+                </div>
+              </div>
+
+              <!-- Consumption Suitability -->
+              <div class="kelayakan-container">
+                <div class="kelayakan-score-wrap">
+                  <span class="label-md"
+                    style="font-weight: 700; color: var(--color-primary-70); text-transform: uppercase;">Kelayakan
+                    Konsumsi</span>
+                  <span class="kelayakan-score" id="kelayakanPct">—</span>
+                </div>
+                <div class="conf-track" style="height: 6px;">
+                  <div class="conf-fill" id="kelayakanBar" style="width:0%; background: var(--color-primary);"></div>
+                </div>
+                <div id="kelayakanStatus" class="kelayakan-status-badge">Menunggu Analisis...</div>
+
+                <!-- UX: Recommendations Box -->
+                <div id="rekomendasiTindakan"
+                  style="font-size: 12px; font-weight: 500; text-align: left; color: var(--color-primary-60); margin-top: 6px; padding: 10px 14px; border-radius: var(--rounded-sm); border: 1px solid var(--border-rek-box); background: var(--bg-rek-box); line-height: 1.5; transition: all 0.3s ease;">
+                  Menunggu analisis bahan makanan untuk memberikan rekomendasi tindakan...
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- System Inference Controllers -->
+          <div class="card">
+            <div class="card-title">Kontrol Inferensi</div>
+            <div class="model-load-area">
+              <div class="toggle-row">
+                <span class="body-sm" style="font-weight: 500;">Inferensi Otomatis (Realtime)</span>
+                <label class="toggle-switch">
+                  <input type="checkbox" id="autoToggle" checked onchange="toggleAuto(this.checked)">
+                  <span class="toggle-slider"></span>
+                </label>
+              </div>
+              <div class="toggle-row">
+                <span class="body-sm" style="font-weight: 500;">Tampilkan Garis Pindai</span>
+                <label class="toggle-switch">
+                  <input type="checkbox" id="scanToggle" checked onchange="toggleScan(this.checked)">
+                  <span class="toggle-slider"></span>
+                </label>
+              </div>
+              <button class="btn dark" style="width: 100%; justify-content: center; margin-top: 12px;"
+                onclick="runSingleInference()">Analisis Frame Sekarang</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <hr class="section-divider" />
+
+      <!-- Bottom Description -->
+      <div class="explanation-card full-width">
+        <div class="card-title" style="border: none; padding-bottom: 0; margin-bottom: 20px;">Deskripsi & Panduan
+          Pengujian</div>
+
+        <!-- Deskripsi AI -->
+        <p
+          style="margin-bottom: 32px; font-size: 15px; line-height: 1.7; max-width: 950px; color: var(--color-primary-60);">
+          Sistem Deteksi Kesegaran berbasis AI ini dibangun untuk mendukung program program <strong>Makan Bergizi Gratis
+            (MBG)</strong>.
+          Menggunakan deep learning <strong>MobileNetV2</strong> yang dilatih secara khusus pada puluhan ribu citra
+          bahan mentah, sistem mengklasifikasikan bahan pangan menjadi kategori <strong>Segar</strong> atau
+          <strong>Tidak Segar</strong> secara realtime.
+        </p>
+
+        <!-- Pill Steps row -->
+        <div class="steps-row"
+          style="display: flex; align-items: center; justify-content: space-between; gap: 24px; border-top: 1px solid var(--color-secondary); padding-top: 24px; flex-wrap: wrap;">
+
+          <div class="step-item" style="display: flex; align-items: center; gap: 12px;">
+            <span class="step-num"
+              style="width: 28px; height: 28px; border-radius: var(--rounded-full); background: var(--color-tertiary); color: #120A59; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 800; font-family: var(--font-mono);">01</span>
+            <span class="body-sm" style="font-weight: 600; color: var(--color-primary);">Klik tombol Buka Kamera</span>
+          </div>
+
+          <span class="step-arrow" style="color: var(--color-primary-70); font-weight: 700;">→</span>
+
+          <div class="step-item" style="display: flex; align-items: center; gap: 12px;">
+            <span class="step-num"
+              style="width: 28px; height: 28px; border-radius: var(--rounded-full); background: var(--color-tertiary); color: #120A59; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 800; font-family: var(--font-mono);">02</span>
+            <span class="body-sm" style="font-weight: 600; color: var(--color-primary);">Arahkan bahan pangan atau
+              Unggah Media</span>
+          </div>
+
+          <span class="step-arrow" style="color: var(--color-primary-70); font-weight: 700;">→</span>
+
+          <div class="step-item" style="display: flex; align-items: center; gap: 12px;">
+            <span class="step-num"
+              style="width: 28px; height: 28px; border-radius: var(--rounded-full); background: var(--color-tertiary); color: #120A59; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 800; font-family: var(--font-mono);">03</span>
+            <span class="body-sm" style="font-weight: 600; color: var(--color-primary);">Lihat hasil analisis kelayakan
+              secara realtime</span>
+          </div>
+
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- TAB REPORT -->
+  <div class="tab-content" id="tab-report">
+    <div class="report-content">
+
+      <!-- Report Title Header -->
+      <div class="header-bar">
+        <div>
+          <h1 class="report-title">Model Training Report <span class="tag">YOLOv8</span></h1>
+          <p class="report-sub">MBG Raw Ingredient Freshness Object Detection — Group 11, Politeknik Caltex Riau</p>
+        </div>
+        <div class="report-meta">
+          <div>25 Epochs Trained</div>
+          <div style="margin-top: 4px; font-weight: 700; color: var(--color-primary);">Best Weights: best.pt</div>
+        </div>
+      </div>
+
+      <!-- Big Metrics Dashboard -->
+      <div class="metric-grid">
+        <div class="metric-card">
+          <div class="metric-label">Validation Accuracy (val_accuracy)</div>
+          <div class="metric-value green">98.67%</div>
+          <div class="metric-sub">Final Validation Set</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Validation Loss (val_loss)</div>
+          <div class="metric-value blue">0.0372</div>
+          <div class="metric-sub">Validation Loss</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Total Dataset</div>
+          <div class="metric-value" style="font-size:32px;">64,627</div>
+          <div class="metric-sub">51,712 Training · 12,915 Validation</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Average Time</div>
+          <div class="metric-value" style="font-size:32px;">~29m</div>
+          <div class="metric-sub">~1s / step · 1616 steps per epoch</div>
+        </div>
+      </div>
+
+      <!-- Technical Details Details -->
+      <div class="info-row">
+        <div class="info-card">
+          <h3 class="info-card-title">Architecture Information</h3>
+          <div class="kv"><span class="kv-k">Base Model</span><span class="kv-v">YOLOv8 Nano (Pre-trained COCO)</span></div>
+          <div class="kv"><span class="kv-k">Input Shape</span><span class="kv-v">640 × 640 × 3 (RGB)</span></div>
+          <div class="kv"><span class="kv-k">Model Type</span><span class="kv-v">Object Detection (fresh / rotten)</span></div>
+          <div class="kv"><span class="kv-k">Output Layer</span><span class="kv-v">Bounding Boxes + Confidence Scores</span></div>
+          <div class="kv"><span class="kv-k">Optimizer</span><span class="kv-v">SGD (Auto-selected)</span></div>
+        </div>
+        <div class="info-card">
+          <h3 class="info-card-title">Training Configuration</h3>
+          <div class="kv"><span class="kv-k">Batch Size</span><span class="kv-v">16 (VRAM Optimized)</span></div>
+          <div class="kv"><span class="kv-k">Max Epochs</span><span class="kv-v">25</span></div>
+          <div class="kv"><span class="kv-k">Overfitting Prevention</span><span class="kv-v">Early Stopping (patience=5), Dropout 0.15</span></div>
+          <div class="kv"><span class="kv-k">Data Augmentation</span><span class="kv-v">Mosaic, Mixup, Flip, Color Jitter (YOLO-native)</span></div>
+        </div>
+      </div>
+
+      <!-- Evaluasi Visual Curves -->
+      <div class="report-img-container">
+        <h2 class="headline-sm"
+          style="border-bottom: 1px solid var(--color-secondary); padding-bottom: 12px; margin-bottom: 24px;">Training
+          Evaluation Results</h2>
+
+        <div class="report-img-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 32px;">
+          <div class="card" style="text-align: center;">
+            <span class="label-md" style="font-weight: 700; color: var(--color-primary);">Training & Validation Accuracy
+              Curves</span>
+            <img src="{{ url_for('static', filename='grafik_akurasi.png') }}" class="report-img" alt="Accuracy Curves"
+              onerror="this.src=''; this.alt='Accuracy chart not generated yet. Ensure file exists at static/grafik_akurasi.png';">
+            <p style="font-size:12px; color: var(--color-primary-60); margin-top:8px;">Visualization of training &
+              validation accuracy over 30 epochs.</p>
+          </div>
+
+          <div class="card" style="text-align: center;">
+            <span class="label-md" style="font-weight: 700; color: var(--color-primary);">Training & Validation Loss
+              Curves</span>
+            <img src="{{ url_for('static', filename='grafik_loss.png') }}" class="report-img" alt="Loss Curves"
+              onerror="this.src=''; this.alt='Loss chart not generated yet. Ensure file exists at static/grafik_loss.png';">
+            <p style="font-size:12px; color: var(--color-primary-60); margin-top:8px;">Visualization of training &
+              validation loss over 30 epochs.</p>
+          </div>
+
+          <div class="card confusion-matrix-card" style="text-align: center;">
+            <span class="label-md"
+              style="font-weight: 700; color: var(--color-primary); display: block; margin: 0 auto 12px;">Confusion
+              Matrix Evaluation</span>
+            <img src="{{ url_for('static', filename='confusion_matrix.png') }}" class="report-img"
+              alt="Confusion Matrix" style="max-width: 480px; margin: 12px auto 0; display: block;"
+              onerror="this.src=''; this.alt='Confusion matrix not generated yet. Ensure file exists at static/confusion_matrix.png';">
+            <p style="font-size:12px; color: var(--color-primary-60); margin-top:16px;">Confusion matrix showing final
+              classification performance on test dataset.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // ==================== UI & TABS LOGIC ====================
+    function switchTab(tabId, tabEl) {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+
+      if (tabEl) {
+        tabEl.classList.add('active');
+      } else if (window.event) {
+        const target = window.event.target || window.event.srcElement;
+        target.classList.add('active');
+      }
+      document.getElementById('tab-' + tabId).classList.add('active');
+    }
+
+    // ==================== THEME SWITCHER LOGIC ====================
+    function toggleTheme() {
+      const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+      const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+    }
+
+    // ==================== SCROLL LISTENERS FOR DYNAMIC ISLAND ====================
+    window.addEventListener('scroll', () => {
+      const header = document.querySelector('header');
+      if (window.scrollY > 40) {
+        header.classList.add('scrolled');
+      } else {
+        header.classList.remove('scrolled');
+      }
+    });
+
+    // ==================== DETECTION LOGIC ====================
+    let stream = null;
+    let isRunning = false;
+    let autoInfer = true;
+    let inferInterval = null;
+    let isFetching = false;
+    let mediaType = 'none'; // 'webcam', 'video', 'image'
+
+    let totalScan = 0, countSegar = 0, countTidak = 0, confSum = 0;
+    let lastFrameTime = performance.now();
+    let frameCount = 0;
+
+    const video = document.getElementById('mediaEl');
+    const imageEl = document.getElementById('imageEl');
+    const captureCanvas = document.getElementById('captureCanvas');
+    const captureCtx = captureCanvas.getContext('2d');
+    const overlayCanvas = document.getElementById('overlayCanvas');
+    const overlayCtx = overlayCanvas.getContext('2d');
+    const cameraFrame = document.getElementById('cameraFrame');
+    const loader = document.getElementById('analysisLoader');
+
+    function setStatus(text, state) {
+      document.getElementById('statusText').textContent = text;
+      document.getElementById('statusDot').className = 'status-dot ' + state;
+    }
+
+    // Check Backend Status on load
+    fetch('/status').then(r => r.json()).then(data => {
+      if (data.status === 'ready') setStatus('Model Aktif (.h5)', 'live');
+      else setStatus('Model Error', 'error');
+    }).catch(e => setStatus('Backend Offline', 'error'));
+
+    async function startCamera() {
+      try {
+        if (stream) stopCamera(); // Stop if already running
+        imageEl.style.display = 'none';
+        video.style.display = 'block';
+
+        stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment', width: { ideal: 640 }, height: { ideal: 480 } } });
+        video.srcObject = stream;
+        await video.play();
+
+        mediaType = 'webcam';
+        isRunning = true;
+        document.getElementById('startBtn').disabled = true;
+        document.getElementById('stopBtn').disabled = false;
+        document.getElementById('scanLine').classList.add('active');
+
+        requestAnimationFrame(updateFPS);
+        if (autoInfer) startAutoInfer();
+      } catch (e) {
+        alert('Tidak bisa mengakses kamera: ' + e.message);
+      }
+    }
+
+    function stopCamera() {
+      if (stream) {
+        stream.getTracks().forEach(t => t.stop());
+        stream = null;
+      }
+      video.srcObject = null;
+      isRunning = false;
+      mediaType = 'none';
+      stopAutoInfer();
+      document.getElementById('startBtn').disabled = false;
+      document.getElementById('stopBtn').disabled = true;
+      document.getElementById('scanLine').classList.remove('active');
+      document.getElementById('fpsBadge').textContent = '— FPS';
+      cameraFrame.className = 'camera-frame';
+      clearOverlay();
+    }
+
+    function handleFileUpload(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      stopCamera();
+      const url = URL.createObjectURL(file);
+
+      if (file.type.startsWith('video/')) {
+        imageEl.style.display = 'none';
+        video.style.display = 'block';
+        video.srcObject = null;
+        video.src = url;
+        video.loop = true;
+        video.play();
+        mediaType = 'video';
+        isRunning = true;
+        document.getElementById('stopBtn').disabled = false;
+        document.getElementById('scanLine').classList.add('active');
+        requestAnimationFrame(updateFPS);
+        if (autoInfer) startAutoInfer();
+      } else if (file.type.startsWith('image/')) {
+        video.style.display = 'none';
+        video.pause();
+        imageEl.style.display = 'block';
+        imageEl.src = url;
+        mediaType = 'image';
+        isRunning = true;
+        document.getElementById('stopBtn').disabled = false;
+        document.getElementById('scanLine').classList.remove('active');
+
+        // Render after load
+        imageEl.onload = () => {
+          if (autoInfer) runSingleInference();
+        };
+      }
+    }
+
+    // Stats helper
+    function updateFPS() {
+      if (!isRunning || mediaType === 'image') return;
+      frameCount++;
+      const now = performance.now();
+      if (now - lastFrameTime >= 1000) {
+        document.getElementById('fpsBadge').textContent = frameCount + ' FPS';
+        frameCount = 0;
+        lastFrameTime = now;
+      }
+      requestAnimationFrame(updateFPS);
+    }
+
+    // 700ms delay for performance stability
+    function startAutoInfer() {
+      if (inferInterval) clearInterval(inferInterval);
+      inferInterval = setInterval(runSingleInference, 700);
+    }
+
+    function stopAutoInfer() {
+      if (inferInterval) { clearInterval(inferInterval); inferInterval = null; }
+    }
+
+    function toggleAuto(val) {
+      autoInfer = val;
+      if (isRunning && mediaType !== 'image') {
+        if (val) startAutoInfer(); else stopAutoInfer();
+      }
+    }
+
+    function toggleScan(val) {
+      const el = document.getElementById('scanLine');
+      if (val && isRunning && mediaType !== 'image') el.classList.add('active');
+      else el.classList.remove('active');
+    }
+
+    async function runSingleInference() {
+      if (isFetching || !isRunning) return;
+
+      let sourceWidth, sourceHeight, sourceElement;
+
+      if (mediaType === 'webcam' || mediaType === 'video') {
+        if (video.readyState < 2) return;
+        sourceWidth = video.videoWidth;
+        sourceHeight = video.videoHeight;
+        sourceElement = video;
+      } else if (mediaType === 'image') {
+        sourceWidth = imageEl.naturalWidth;
+        sourceHeight = imageEl.naturalHeight;
+        sourceElement = imageEl;
+      } else {
+        return;
+      }
+
+      if (sourceWidth === 0 || sourceHeight === 0) return;
+
+      captureCanvas.width = sourceWidth;
+      captureCanvas.height = sourceHeight;
+      captureCtx.drawImage(sourceElement, 0, 0, sourceWidth, sourceHeight);
+
+      const base64Data = captureCanvas.toDataURL('image/jpeg', 0.8).split(',')[1];
+
+      isFetching = true;
+      loader.style.display = 'flex'; // UX Show Loading
+      document.querySelector('header').classList.add('scanning'); // Dynamic Island morph state
+      try {
+        const response = await fetch('/predict_frame', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ image: base64Data })
+        });
+
+        const result = await response.json();
+        if (result.success) {
+          updateResult(result);
+          drawBoundingBox(sourceElement, result);
+          addToHistory(result);
+          updateStats(result);
+        } else {
+          console.error("Backend error:", result.error);
+        }
+      } catch (e) {
+        console.error('Inference request failed:', e);
+      }
+      isFetching = false;
+      loader.style.display = 'none'; // UX Hide Loading
+      document.querySelector('header').classList.remove('scanning');
+    }
+
+    function updateResult(res) {
+      const isSegar = res.label === 'segar';
+      const label = document.getElementById('resultLabel');
+      const overlay = document.getElementById('resultOverlay');
+
+      document.getElementById('segarPct').textContent = res.segar.toFixed(1) + '%';
+      document.getElementById('tidakPct').textContent = res.tidak.toFixed(1) + '%';
+      document.getElementById('segarBar').style.width = res.segar + '%';
+      document.getElementById('tidakBar').style.width = res.tidak + '%';
+
+      // UX Viewfinder Glow & Highlight updates
+      if (isSegar) {
+        label.textContent = 'SEGAR';
+        label.className = 'result-label segar';
+        overlay.textContent = `SEGAR (${res.segar.toFixed(1)}%)`;
+        overlay.className = 'result-overlay segar';
+        cameraFrame.className = 'camera-frame segar';
+      } else {
+        label.textContent = 'TIDAK SEGAR';
+        label.className = 'result-label tidak';
+        overlay.textContent = `TIDAK SEGAR (${res.tidak.toFixed(1)}%)`;
+        overlay.className = 'result-overlay tidak';
+        cameraFrame.className = 'camera-frame tidak';
+      }
+      overlay.style.display = 'block';
+
+      // Update Kelayakan (Ghaswul Fikri Fadhillah)
+      const kelPct = document.getElementById('kelayakanPct');
+      const kelBar = document.getElementById('kelayakanBar');
+      const kelStatus = document.getElementById('kelayakanStatus');
+      const rekBox = document.getElementById('rekomendasiTindakan');
+
+      const val = res.kelayakan;
+      kelPct.textContent = val.toFixed(1) + '%';
+      kelBar.style.width = val + '%';
+      kelStatus.textContent = res.kelayakan_status;
+
+      if (val >= 70.0) {
+        // Sangat Segar & Aman (Green)
+        kelPct.style.color = 'var(--color-success)';
+        kelBar.style.background = 'var(--color-success)';
+        kelStatus.style.background = 'rgba(13, 148, 136, 0.05)';
+        kelStatus.style.borderColor = 'rgba(13, 148, 136, 0.2)';
+        kelStatus.style.color = 'var(--color-success)';
+
+        // UX Action Recommendation
+        rekBox.innerHTML = '<strong>Rekomendasi:</strong> Bahan makanan sangat segar dan higienis. Layak langsung diolah untuk menu MBG atau disimpan dalam lemari pendingin.';
+        rekBox.style.background = 'rgba(13, 148, 136, 0.04)';
+        rekBox.style.borderColor = 'rgba(13, 148, 136, 0.2)';
+      } else if (val >= 50.0) {
+        // Batas Aman (Yellow/Orange)
+        kelPct.style.color = 'var(--color-warn)';
+        kelBar.style.background = 'var(--color-warn)';
+        kelStatus.style.background = 'rgba(245, 158, 11, 0.05)';
+        kelStatus.style.borderColor = 'rgba(245, 158, 11, 0.2)';
+        kelStatus.style.color = 'var(--color-warn)';
+
+        // UX Action Recommendation
+        rekBox.innerHTML = '<strong>Rekomendasi:</strong> Batas ambang kesegaran. Bahan pangan wajib dimasak matang segera (konsumsi hari ini) dan jangan disajikan mentah.';
+        rekBox.style.background = 'rgba(245, 158, 11, 0.04)';
+        rekBox.style.borderColor = 'rgba(245, 158, 11, 0.2)';
+      } else {
+        // Tidak Layak (Red)
+        kelPct.style.color = 'var(--color-error)';
+        kelBar.style.background = 'var(--color-error)';
+        kelStatus.style.background = 'rgba(217, 45, 32, 0.05)';
+        kelStatus.style.borderColor = 'rgba(217, 45, 32, 0.2)';
+        kelStatus.style.color = 'var(--color-error)';
+
+        // UX Action Recommendation
+        rekBox.innerHTML = '<strong>Rekomendasi:</strong> Terindikasi busuk/rusak. <strong>Jangan diolah untuk program MBG!</strong> Segera buang atau jadikan bahan kompos organik.';
+        rekBox.style.background = 'rgba(217, 45, 32, 0.04)';
+        rekBox.style.borderColor = 'rgba(217, 45, 32, 0.2)';
+      }
+    }
+
+    function drawBoundingBox(sourceElement, res) {
+      const rect = sourceElement.getBoundingClientRect();
+      overlayCanvas.width = rect.width;
+      overlayCanvas.height = rect.height;
+
+      overlayCtx.clearRect(0, 0, rect.width, rect.height);
+
+      if (!res.boxes || res.boxes.length === 0) {
+        return;
+      }
+
+      // Calculate scale factors to match client viewport coordinates
+      let sourceWidth = 640;
+      let sourceHeight = 480;
+      if (mediaType === 'webcam' || mediaType === 'video') {
+        if (video.videoWidth > 0) {
+          sourceWidth = video.videoWidth;
+          sourceHeight = video.videoHeight;
+        }
+      } else if (mediaType === 'image') {
+        if (imageEl.naturalWidth > 0) {
+          sourceWidth = imageEl.naturalWidth;
+          sourceHeight = imageEl.naturalHeight;
+        }
+      }
+
+      const scaleX = rect.width / sourceWidth;
+      const scaleY = rect.height / sourceHeight;
+
+      res.boxes.forEach(box => {
+        const [x1, y1, x2, y2] = box.bbox;
+        const labelName = box.label;
+        const conf = box.confidence;
+
+        // Scale coordinates
+        const rx1 = x1 * scaleX;
+        const ry1 = y1 * scaleY;
+        const rx2 = x2 * scaleX;
+        const ry2 = y2 * scaleY;
+        const w = rx2 - rx1;
+        const h = ry2 - ry1;
+
+        const color = labelName === 'segar' ? '#0D9488' : '#D92D20';
+        const labelText = labelName === 'segar' ? `Segar (${conf.toFixed(0)}%)` : `Tidak Segar (${conf.toFixed(0)}%)`;
+
+        // Draw Bounding Box rectangle
+        overlayCtx.strokeStyle = color;
+        overlayCtx.lineWidth = 3;
+        overlayCtx.strokeRect(rx1, ry1, w, h);
+
+        // Draw text label background
+        overlayCtx.fillStyle = color;
+        overlayCtx.font = 'bold 12px Plus Jakarta Sans';
+        const textWidth = overlayCtx.measureText(labelText).width;
+        overlayCtx.fillRect(rx1, ry1 - 20 >= 0 ? ry1 - 20 : 0, textWidth + 10, 20);
+
+        // Draw text label
+        overlayCtx.fillStyle = '#FFFFFF';
+        overlayCtx.fillText(labelText, rx1 + 5, ry1 - 5 >= 15 ? ry1 - 5 : 15);
+      });
+    }
+
+    function clearOverlay() {
+      overlayCtx.clearRect(0, 0, overlayCanvas.width, overlayCanvas.height);
+      document.getElementById('resultOverlay').style.display = 'none';
+    }
+
+    function addToHistory(res) {
+      const isSegar = res.label === 'segar';
+      const conf = isSegar ? res.segar : res.tidak;
+
+      const div = document.createElement('div');
+      div.className = 'history-item';
+      div.innerHTML = `
+    <div style="display:flex; align-items:center;">
+      <span class="hist-badge ${isSegar ? 'segar' : 'tidak'}">${isSegar ? 'SEGAR' : 'RUSAK'}</span>
+      <span class="hist-conf">${conf.toFixed(1)}%</span>
+    </div>
+    <div class="hist-time">${new Date().toLocaleTimeString()}</div>
+  `;
+      const list = document.getElementById('historyList');
+      if (list.querySelector('.empty-history')) list.innerHTML = '';
+      list.insertBefore(div, list.firstChild);
+      if (list.children.length > 20) list.lastChild.remove();
+    }
+
+    function updateStats(res) {
+      totalScan++;
+      const isSegar = res.label === 'segar';
+      if (isSegar) countSegar++; else countTidak++;
+      confSum += isSegar ? res.segar : res.tidak;
+
+      document.getElementById('totalScan').textContent = totalScan;
+      document.getElementById('countSegar').textContent = countSegar;
+      document.getElementById('countTidak').textContent = countTidak;
+      document.getElementById('avgConf').textContent = (confSum / totalScan).toFixed(1) + '%';
+    }
+
+    function clearHistory() {
+      document.getElementById('historyList').innerHTML = '<div class="empty-history">Belum ada riwayat pemindaian</div>';
+      totalScan = 0; countSegar = 0; countTidak = 0; confSum = 0;
+      document.getElementById('totalScan').textContent = '0';
+      document.getElementById('countSegar').textContent = '0';
+      document.getElementById('countTidak').textContent = '0';
+      document.getElementById('avgConf').textContent = '—';
+
+      // UX Reset Result Cards
+      document.getElementById('resultLabel').textContent = 'Menunggu...';
+      document.getElementById('resultLabel').className = 'result-label idle';
+      document.getElementById('segarPct').textContent = '—';
+      document.getElementById('tidakPct').textContent = '—';
+      document.getElementById('segarBar').style.width = '0%';
+      document.getElementById('tidakBar').style.width = '0%';
+
+      document.getElementById('kelayakanPct').textContent = '—';
+      document.getElementById('kelayakanBar').style.width = '0%';
+      document.getElementById('kelayakanStatus').textContent = 'Menunggu Analisis...';
+      document.getElementById('kelayakanStatus').className = 'kelayakan-status-badge';
+      document.getElementById('kelayakanStatus').style = '';
+
+      const rekBox = document.getElementById('rekomendasiTindakan');
+      rekBox.textContent = 'Menunggu analisis bahan makanan untuk memberikan rekomendasi tindakan...';
+      rekBox.style = '';
+
+      cameraFrame.className = 'camera-frame';
+      clearOverlay();
+    }
+
+    window.addEventListener('resize', () => {
+      if (isRunning) clearOverlay();
+    });
+  </script>
+</body>
+
+</html>
