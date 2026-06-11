@@ -5,9 +5,9 @@
 [![PyTorch Version](https://img.shields.io/badge/pytorch-v2.0+-ee4c2c.svg)](https://pytorch.org/)
 [![Flask Version](https://img.shields.io/badge/flask-3.0+-green.svg)](https://flask.palletsprojects.com/)
 
-An AI-powered real-time freshness object detection system tailored for the **Makan Bergizi Gratis (MBG)** national program. Built using **Ultralytics YOLOv8 Object Detection** and served via a lightweight, high-performance Flask backend with a premium, responsive glassmorphic dark interface.
+An AI-powered real-time freshness object detection system tailored for the Makan Bergizi Gratis (MBG) national program. Built using Ultralytics YOLOv8 Object Detection and served via a lightweight, high-performance Flask backend with a premium, responsive glassmorphic dark interface.
 
-Developed by **Kelompok 11 — Politeknik Caltex Riau**:
+Developed by Kelompok 11 — Politeknik Caltex Riau:
 * Ghaswul Fikri Fadhillah (<ghaswul23ti@mahasiswa.pcr.ac.id>)
 * Daffa Hadziq (<daffa23ti@mahasiswa.pcr.ac.id>)
 * Dafi Hibrizi (<dafi23ti@mahasiswa.pcr.ac.id>)
@@ -33,10 +33,10 @@ graph TD
 ```
 
 ### System Workflow Description
-1. **Frontend Capture:** The browser captures real-time video frames from the webcam or processes uploaded files, rendering the output on a `<canvas>`.
+1. **Frontend Capture:** The browser captures real-time video frames from the webcam or processes uploaded files, rendering the output on a canvas.
 2. **Data Transmission:** Every frame is serialized into a Base64 string and sent asynchronously via the Fetch API to the `/predict_frame` backend endpoint.
-3. **Backend Processing:** Flask receives the payload, decodes it into a standard OpenCV image matrix (`numpy` array), and converts the channels from BGR to RGB.
-4. **AI Inference:** The trained **YOLOv8 Object Detection** model (`runs/detect_freshness/weights/best.pt`) predicts bounding boxes and class labels (`fresh` / `rotten`) for each ingredient.
+3. **Backend Processing:** Flask receives the payload, decodes it into a standard OpenCV image matrix (numpy array), and converts the channels from BGR to RGB.
+4. **AI Inference:** The trained YOLOv8 Object Detection model (`runs/detect_freshness/weights/best.pt`) predicts bounding boxes and class labels (fresh / rotten) for each ingredient.
 5. **Suitability Scoring:** The relative ratio of fresh versus rotten items in the frame is evaluated and mapped to a percentage suitability index using a custom piecewise linear algorithm.
 6. **UI Rendering:** The result is returned as JSON to the client, which dynamically renders neon bounding boxes around each detected fruit, updates average session statistics, logs recent items, and updates the dynamic suitability score bar without page reloads.
 
@@ -47,7 +47,7 @@ graph TD
 ### 1. Real-time Video Inference
 * **Webcam Streaming:** Scans raw food ingredients via the device webcam.
 * **Media Uploads:** Supports scanning via uploaded static images or pre-recorded videos.
-* **Scan Viewport Effects:** Interactive neon scanning lines and color-coded bounding boxes representing prediction status (green for `segar` / `fresh`, red for `tidak_segar` / `rotten`).
+* **Scan Viewport Effects:** Interactive neon scanning lines and color-coded bounding boxes representing prediction status (green for fresh, red for rotten).
 
 ### 2. Consumption Suitability Index
 * **Piecewise Linear Scoring:** Calculates a precise percentage suitability score based on fruit counts and detection confidence.
@@ -71,10 +71,10 @@ graph TD
 
 ## Installation & Setup
 
-### 🛠️ Langkah 1: Penyiapan Dataset
-1. Unduh dataset format **YOLOv8** dari Roboflow.
-2. Ekstrak file zip dan tempatkan foldernya di dalam project dengan nama `yolo_detection_dataset`.
-   Strukturnya harus berupa:
+### Step 1: Dataset Preparation
+1. Download the dataset in YOLOv8 format from Roboflow.
+2. Extract the ZIP file and place the directory inside the project root, naming it `yolo_detection_dataset`.
+   The expected directory structure is:
    ```text
    yolo_detection_dataset/
    ├── train/
@@ -83,15 +83,15 @@ graph TD
    └── data.yaml
    ```
 
-### 🚀 Langkah 2: Pelatihan Model (Training)
-Buka Jupyter Notebook [model_training.ipynb](file:///c:/Punya%20GW/Kuliah/ProjectKel11_YOLO/model_training.ipynb) dan **Jalankan semua sel (Run All)**.
-Notebook ini akan otomatis mengunduh base model `yolov8n.pt`, melatih model Object Detection selama 25 epoch, dan mengekspor weights terbaik ke `runs/detect_freshness/weights/best.pt`.
+### Step 2: Model Training
+Open the Jupyter Notebook [model_training.ipynb](file:///c:/Punya%20GW/Kuliah/ProjectKel11_YOLO/model_training.ipynb) and execute all cells (Run All).
+The notebook will automatically download the pre-trained `yolov8n.pt` base weights, install all required dependencies from `requirements.txt`, train the object detection model for 25 epochs, and export the best-performing weights to `runs/detect_freshness/weights/best.pt`.
 
-### 🌐 Langkah 3: Menjalankan Aplikasi Web
-Setelah training selesai dan file `best.pt` terbentuk, jalankan perintah berikut di terminal:
+### Step 3: Web Application Deployment
+Once training is complete and the `best.pt` weights are exported, run the following commands in your terminal to deploy the Flask application:
 ```bash
 cd "c:\Punya GW\Kuliah\ProjectKel11_YOLO"
 pip install -r requirements.txt
 python web/app.py
 ```
-Buka browser dan buka **`http://localhost:8080`**.
+Open your web browser and navigate to `http://localhost:8080`.
