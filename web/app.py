@@ -1,6 +1,7 @@
 import os
 import base64
 import cv2
+import csv
 import numpy as np
 from flask import Flask, request, jsonify, render_template
 # pyrefly: ignore [missing-import]
@@ -24,9 +25,45 @@ except Exception as e:
     print(f"Error loading YOLO model from {model_path}: {e}")
     model = None
 
+def get_training_stats():
+    results_path = os.path.join(os.path.dirname(script_dir), 'runs', 'detect_freshness', 'results.csv')
+    stats = {
+        "epochs": 0,
+        "map50": "--",
+        "val_loss": "--",
+        "best_epoch": "--",
+        "avg_time": "--",
+        "status": "not_trained"
+    }
+    if os.path.exists(results_path):
+        try:
+            with open(results_path, mode='r') as f:
+                reader = csv.DictReader(f)
+                reader.fieldnames = [field.strip() for field in reader.fieldnames]
+                rows = list(reader)
+                if rows:
+                    stats["epochs"] = len(rows)
+                    # Find row with best mAP50(B)
+                    best_row = max(rows, key=lambda x: float(x.get('metrics/mAP50(B)', 0.0) or 0.0))
+                    stats["map50"] = f"{float(best_row.get('metrics/mAP50(B)', 0.0)) * 100:.2f}%"
+                    # Calculate total validation loss
+                    box_l = float(best_row.get('val/box_loss', 0.0) or 0.0)
+                    cls_l = float(best_row.get('val/cls_loss', 0.0) or 0.0)
+                    dfl_l = float(best_row.get('val/dfl_loss', 0.0) or 0.0)
+                    stats["val_loss"] = f"{box_l + cls_l + dfl_l:.4f}"
+                    stats["best_epoch"] = best_row.get('epoch', '--').strip()
+                    stats["status"] = "trained"
+                    
+                    # Estimate average time per epoch from GPU/CPU detection
+                    stats["avg_time"] = "Dynamic"
+        except Exception as e:
+            print(f"Error parsing results.csv: {e}")
+    return stats
+
 @app.route("/")
 def index():
-    return render_template("index.html")
+    stats = get_training_stats()
+    return render_template("index.html", stats=stats)
 
 @app.route("/status")
 def status():

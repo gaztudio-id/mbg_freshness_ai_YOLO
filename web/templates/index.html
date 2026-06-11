@@ -1642,32 +1642,32 @@
           <p class="report-sub">MBG Raw Ingredient Freshness Object Detection — Group 11, Politeknik Caltex Riau</p>
         </div>
         <div class="report-meta">
-          <div>25 Epochs Trained</div>
-          <div style="margin-top: 4px; font-weight: 700; color: var(--color-primary);">Best Weights: best.pt</div>
+          <div>{{ stats.epochs }} / 25 Epochs Trained</div>
+          <div style="margin-top: 4px; font-weight: 700; color: var(--color-primary);">Best Weights: Epoch {{ stats.best_epoch }}</div>
         </div>
       </div>
 
       <!-- Big Metrics Dashboard -->
       <div class="metric-grid">
         <div class="metric-card">
-          <div class="metric-label">Validation Accuracy (val_accuracy)</div>
-          <div class="metric-value green">98.67%</div>
-          <div class="metric-sub">Final Validation Set</div>
+          <div class="metric-label">Validation mAP50 (metrics/mAP50)</div>
+          <div class="metric-value green">{{ stats.map50 }}</div>
+          <div class="metric-sub">Best Metric Epoch</div>
         </div>
         <div class="metric-card">
-          <div class="metric-label">Validation Loss (val_loss)</div>
-          <div class="metric-value blue">0.0372</div>
-          <div class="metric-sub">Validation Loss</div>
+          <div class="metric-label">Validation Loss (val/loss)</div>
+          <div class="metric-value blue">{{ stats.val_loss }}</div>
+          <div class="metric-sub">Box + Cls + Dfl Validation Loss</div>
         </div>
         <div class="metric-card">
           <div class="metric-label">Total Dataset</div>
-          <div class="metric-value" style="font-size:32px;">64,627</div>
-          <div class="metric-sub">51,712 Training · 12,915 Validation</div>
+          <div class="metric-value" style="font-size:32px;">3,771</div>
+          <div class="metric-sub">2,823 Training · 569 Validation · 379 Testing</div>
         </div>
         <div class="metric-card">
           <div class="metric-label">Average Time</div>
-          <div class="metric-value" style="font-size:32px;">~29m</div>
-          <div class="metric-sub">~1s / step · 1616 steps per epoch</div>
+          <div class="metric-value" style="font-size:32px;">{{ stats.avg_time }}</div>
+          <div class="metric-sub">Estimate based on CPU/GPU device</div>
         </div>
       </div>
 
