@@ -1,0 +1,14 @@
+path: yolo_detection_dataset
+train: train/images
+val: valid/images
+test: test/images
+
+nc: 2
+names: ['fresh', 'rotten']
+
+roboflow:
+  workspace: ghaswul-fikri-fadhillah
+  project: fresh-rotten-1-gncme-sj84o
+  version: 1
+  license: CC BY 4.0
+  url: https://universe.roboflow.com/ghaswul-fikri-fadhillah/fresh-rotten-1-gncme-sj84o/dataset/1
