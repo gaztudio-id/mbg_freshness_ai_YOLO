@@ -5,7 +5,9 @@ Archive*/
 # Datasets and staging data
 dataset_final/
 yolo_dataset/
-yolo_detection_dataset/
+yolo_detection_dataset/train/
+yolo_detection_dataset/valid/
+yolo_detection_dataset/test/
 staging/
 
 # YOLO pre-trained weights and training runs

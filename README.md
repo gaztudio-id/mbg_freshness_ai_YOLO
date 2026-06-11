@@ -84,13 +84,13 @@ graph TD
    ```
 
 ### Step 2: Model Training
-Open the Jupyter Notebook [model_training.ipynb](file:///c:/Punya%20GW/Kuliah/ProjectKel11_YOLO/model_training.ipynb) and execute all cells (Run All).
+Open the Jupyter Notebook [model_training.ipynb](model_training.ipynb) and execute all cells (Run All).
 The notebook will automatically download the pre-trained `yolov8n.pt` base weights, install all required dependencies from `requirements.txt`, train the object detection model for 25 epochs, and export the best-performing weights to `runs/detect_freshness/weights/best.pt`.
 
 ### Step 3: Web Application Deployment
 Once training is complete and the `best.pt` weights are exported, run the following commands in your terminal to deploy the Flask application:
 ```bash
-cd "c:\Punya GW\Kuliah\ProjectKel11_YOLO"
+cd "mbg_freshness_ai_YOLO"
 pip install -r requirements.txt
 python web/app.py
 ```
