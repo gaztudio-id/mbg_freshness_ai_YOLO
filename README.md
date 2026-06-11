@@ -1,19 +1,22 @@
-# MBG Freshness AI — YOLOv8 Object Detection Version
+# MBG Freshness AI — YOLOv8 Object Detection
 
 [![Python Version](https://img.shields.io/badge/python-3.8%20%7C%203.9%20%7C%203.10%20%7C%203.11-blue.svg)](https://www.python.org/)
 [![YOLOv8 Version](https://img.shields.io/badge/ultralytics-v8.0+-red.svg)](https://github.com/ultralytics/ultralytics)
 [![PyTorch Version](https://img.shields.io/badge/pytorch-v2.0+-ee4c2c.svg)](https://pytorch.org/)
 [![Flask Version](https://img.shields.io/badge/flask-3.0+-green.svg)](https://flask.palletsprojects.com/)
 
-An editorial, real-time AI-powered freshness object detection web application tailored for the **Makan Bergizi Gratis (MBG)** national program. Built using **Ultralytics YOLOv8 Object Detection** and served via a lightweight, high-performance Flask backend with a premium, responsive web interface.
+An AI-powered real-time freshness object detection system tailored for the **Makan Bergizi Gratis (MBG)** national program. Built using **Ultralytics YOLOv8 Object Detection** and served via a lightweight, high-performance Flask backend with a premium, responsive glassmorphic dark interface.
 
-Developed by **Kelompok 11 — Politeknik Caltex Riau**: Ghaswul Fikri Fadhillah (<ghaswul23ti@mahasiswa.pcr.ac.id>), Daffa Hadziq (<daffa23ti@mahasiswa.pcr.ac.id>), and Dafi Hibrizi (<dafi23ti@mahasiswa.pcr.ac.id>).
+Developed by **Kelompok 11 — Politeknik Caltex Riau**:
+* Ghaswul Fikri Fadhillah (<ghaswul23ti@mahasiswa.pcr.ac.id>)
+* Daffa Hadziq (<daffa23ti@mahasiswa.pcr.ac.id>)
+* Dafi Hibrizi (<dafi23ti@mahasiswa.pcr.ac.id>)
 
 ---
 
 ## System Architecture & Workflow
 
-Here is how the components interact in the MBG Freshness AI YOLO application:
+Here is how the components interact in the MBG Freshness AI application:
 
 ```mermaid
 graph TD
@@ -81,7 +84,7 @@ graph TD
    ```
 
 ### 🚀 Langkah 2: Pelatihan Model (Training)
-Buka Jupyter Notebook [2_model_training.ipynb](file:///c:/Punya%20GW/Kuliah/ProjectKel11_YOLO/2_model_training.ipynb) dan **Jalankan semua sel (Run All)**.
+Buka Jupyter Notebook [model_training.ipynb](file:///c:/Punya%20GW/Kuliah/ProjectKel11_YOLO/model_training.ipynb) dan **Jalankan semua sel (Run All)**.
 Notebook ini akan otomatis mengunduh base model `yolov8n.pt`, melatih model Object Detection selama 25 epoch, dan mengekspor weights terbaik ke `runs/detect_freshness/weights/best.pt`.
 
 ### 🌐 Langkah 3: Menjalankan Aplikasi Web

@@ -14,7 +14,7 @@
   <script>
     // Immediately initialize theme from localStorage to prevent flash
     (function () {
-      const savedTheme = localStorage.getItem('theme') || 'light';
+      const savedTheme = localStorage.getItem('theme') || 'dark';
       document.documentElement.setAttribute('data-theme', savedTheme);
     })();
   </script>
@@ -65,13 +65,13 @@
       --color-neutral: #070714;
       --color-surface: #0E0E24;
       --color-on-surface: #F3F4F6;
-      --color-error: #EF4444;
+      --color-error: #FF2A6D;
 
       --color-primary-60: #9CA3AF;
       --color-primary-70: #8C8CB4;
       --color-primary-90: #1B1B3C;
-      --color-success: #14B8A6;
-      --color-warn: #F59E0B;
+      --color-success: #00F5D4;
+      --color-warn: #FFF01F;
 
       --bg-card-mini: #151532;
       --bg-rek-box: #12122B;
@@ -542,12 +542,12 @@
     /* Glowing effect for viewfinder feedback */
     .camera-frame.segar {
       border-color: var(--color-success) !important;
-      box-shadow: 0 0 16px rgba(13, 148, 136, 0.3);
+      box-shadow: 0 0 24px rgba(0, 245, 212, 0.45);
     }
 
     .camera-frame.tidak {
       border-color: var(--color-error) !important;
-      box-shadow: 0 0 16px rgba(217, 45, 32, 0.3);
+      box-shadow: 0 0 24px rgba(255, 42, 109, 0.45);
     }
 
     #mediaEl {
@@ -2080,7 +2080,7 @@
         const w = rx2 - rx1;
         const h = ry2 - ry1;
 
-        const color = labelName === 'segar' ? '#0D9488' : '#D92D20';
+        const color = labelName === 'segar' ? '#00F5D4' : '#FF2A6D';
         const labelText = labelName === 'segar' ? `Segar (${conf.toFixed(0)}%)` : `Tidak Segar (${conf.toFixed(0)}%)`;
 
         // Draw Bounding Box rectangle
